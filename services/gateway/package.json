@@ -1,0 +1,8 @@
+{
+  "name": "gateway",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "tape test/test.*.js | faucet"
+  }
+}

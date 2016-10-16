@@ -1,0 +1,38 @@
+version: '2'
+services:
+  beanstalkd:
+    image: bbartolome/beanstalkd
+  elasticsearch:
+    image: elasticsearch
+  redis:
+    image: redis
+  mysql:
+    image: mysql
+    environment:
+      - "MYSQL_ALLOW_EMPTY_PASSWORD=yes"
+  gateway:
+    build: services/gateway
+    image: eq8/gateway
+    links:
+      - beanstalkd
+      - elasticsearch
+      - redis
+  processor:
+    build: services/processor
+    image: eq8/processor
+    links:
+      - beanstalkd
+      - mysql
+  indexer:
+    build: services/indexer
+    image: eq8/indexer
+    links:
+      - redis
+      - mysql
+      - elasticsearch
+  notifier:
+    build: services/notifier
+    image: eq8/notifier
+    links:
+      - mysql
+      - redis
