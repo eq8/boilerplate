@@ -3,6 +3,25 @@
   "main": "index.js",
   "private": true,
   "scripts": {
+    "build": "webpack",
+    "postinstall": "npm run build",
     "test": "tape test/test.*.js | faucet"
+  },
+  "dependencies": {
+    "babel-polyfill": "6.16.0",
+    "eq8": "1.0.1",
+    "express": "4.14.0",
+    "nconf": "0.8.4",
+    "react": "15.3.2",
+    "react-dom": "15.3.2",
+    "redbloom": "1.0.1"
+  },
+  "devDependencies": {
+    "babel-core": "6.17.0",
+    "babel-loader": "6.2.5",
+    "babel-preset-es2015": "6.16.0",
+    "babel-preset-react": "6.16.0",
+    "tape": "4.6.2",
+    "webpack": "1.13.2"
   }
 }

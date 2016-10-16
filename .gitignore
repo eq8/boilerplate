@@ -1,2 +1,6 @@
 *.swp
 node_modules
+npm-debug.log
+fonts
+
+bundle.js
