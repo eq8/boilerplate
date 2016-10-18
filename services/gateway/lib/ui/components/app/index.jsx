@@ -1,4 +1,5 @@
 import React from 'react';
+import { AppBar } from 'react-toolbox/lib/app_bar';
 
 class App extends React.Component {
 	constructor(props) {
@@ -10,7 +11,9 @@ class App extends React.Component {
 
 	render() {
 		return (
-			<div>Hello World! {this.state ? this.state.data.get('increment') : 0}</div>
+			<div>
+				<AppBar>App Example</AppBar>
+			</div>
 		);
 	}
 }

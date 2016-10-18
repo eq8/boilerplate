@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import RedBloom from 'redbloom';
 
 import React from 'react';
