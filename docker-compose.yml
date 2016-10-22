@@ -2,17 +2,24 @@ version: '2'
 services:
   beanstalkd:
     image: bbartolome/beanstalkd
+    restart: always
   elasticsearch:
     image: elasticsearch
+    restart: always
   redis:
     image: redis
+    restart: always
   mysql:
     image: mysql
+    restart: always
     environment:
       - "MYSQL_ALLOW_EMPTY_PASSWORD=yes"
   gateway:
     build: services/gateway
     image: eq8/gateway
+    restart: always
+    ports:
+      - "8080:8080"
     links:
       - beanstalkd
       - elasticsearch
@@ -20,12 +27,14 @@ services:
   processor:
     build: services/processor
     image: eq8/processor
+    restart: always
     links:
       - beanstalkd
       - mysql
   indexer:
     build: services/indexer
     image: eq8/indexer
+    restart: always
     links:
       - redis
       - mysql
@@ -33,6 +42,7 @@ services:
   notifier:
     build: services/notifier
     image: eq8/notifier
+    restart: always
     links:
       - mysql
       - redis
