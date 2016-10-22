@@ -1,16 +1,19 @@
 import React from 'react';
+import RedBloom from 'redbloom';
 
 class App extends React.Component {
 	constructor(props) {
 		super(props);
-		props.flux.subscribe(state => {
+		this.flux = RedBloom();
+		this.flux.subscribe(state => {
 			this.setState({data: state});
 		});
 	}
 
 	render() {
+		var self = this;
 		return (
-			<div>Hello World! {this.state ? this.state.data.get('increment') : 0}</div>
+			<div>Hello World!</div>
 		);
 	}
 }
