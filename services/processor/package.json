@@ -2,7 +2,10 @@
   "name": "gateway",
   "main": "index.js",
   "private": true,
-  "scripts": {
-    "test": "tape test/test.*.js | faucet"
+  "dependencies": {
+    "eq8-api": "1.0.1",
+    "nconf": "0.8.4",
+    "seneca": "3.2.2",
+    "seneca-beanstalk-transport": "0.2.1"
   }
 }
