@@ -40,7 +40,7 @@ var client = seneca.client({
 	type: 'beanstalk',
 	host: nconf.get('HOST_QUEUE')
 });
-api.on('trigger', seneca.act.bind(seneca));
+api.on('trigger', client.act.bind(client));
 
 var app = express();
 

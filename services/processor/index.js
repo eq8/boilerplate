@@ -14,4 +14,4 @@ var listen = seneca.listen({
 	type: 'beanstalk',
 	host: nconf.get('HOST_QUEUE')
 });
-api.on('search', seneca.add.bind(seneca));
+api.on('search', listen.add.bind(listen));
