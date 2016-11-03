@@ -4,7 +4,10 @@
   "private": true,
   "dependencies": {
     "eq8-api": "1.0.1",
+    "knex": "0.12.6",
+    "mysql": "2.11.1",
     "nconf": "0.8.4",
+    "rx": "4.1.0",
     "seneca": "3.2.2",
     "seneca-beanstalk-transport": "0.2.1"
   }
