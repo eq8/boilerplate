@@ -27,16 +27,6 @@ var listen = seneca.listen({
 
 api.on('search', listen.add.bind(listen));
 
-api.on('state', function(ctxt, msg, done) {
-	ctxt.trx
-		.insert({
-			desc: ctxt.name,
-			msg: JSON.stringify(msg);
-		})
-		.into(nconf.get('logtable'))
-		.asCallback(done);
-});
-
 api.addRegistrar({
 	actions: function(actions, callback, prior) {
 		prior(actions, function() {
@@ -45,14 +35,25 @@ api.addRegistrar({
 					function(action) {
 						api.search(action.pattern, function(msg, done) {
 							knex.transaction(function(trx) {
-								api.state({name: action.name, trx: trx}, msg, function(err) {
+								trx
+									.insert({
+										desc: action.name,
+										msg: JSON.stringify(msg);
+									})
+									.into(nconf.get('logtable'))
+									.asCallback();
+
+								api.state({trx: trx}, msg, function(err) {
 									if(err) {
-										return trx.rollback();
+										trx.rollback();
+									} else {
+										trx.commit();
 									}
 
-									return trx.commit();
+									setImmediate(done, err);
 								});
 							});
+
 						})
 					},
 					callback,
