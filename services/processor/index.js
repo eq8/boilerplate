@@ -25,7 +25,7 @@ var listen = seneca.listen({
 	host: nconf.get('HOST_QUEUE')
 });
 
-api.on('search', listen.add.bind(listen));
+api.on('subscribe', listen.add.bind(listen));
 
 api.addRegistrar({
 	actions: function(actions, callback, prior) {
@@ -33,7 +33,7 @@ api.addRegistrar({
 			Rx.Observable.from(actions)
 				.subscribe(
 					function(action) {
-						api.search(action.pattern, function(msg, done) {
+						api.subscribe(action.pattern, function(msg, done) {
 							knex.transaction(function(trx) {
 								trx
 									.insert({

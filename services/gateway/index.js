@@ -27,7 +27,7 @@ var api = require('eq8')({
 				}
 
 				if(e) {
-					self.trigger(e);
+					self.dispatch(e);
 				}
 			})
 		}
@@ -40,7 +40,7 @@ var client = seneca.client({
 	type: 'beanstalk',
 	host: nconf.get('HOST_QUEUE')
 });
-api.on('trigger', client.act.bind(client));
+api.on('dispatch', client.act.bind(client));
 
 var app = express();
 
