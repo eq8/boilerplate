@@ -1,4 +1,7 @@
 {
-	"port": "8080"
+	"port": "8080",
+	"db": "eq8",
+	"log": "log",
+	"HOST_DB": "mysql",
 	"HOST_QUEUE": "beanstalkd"
 }
