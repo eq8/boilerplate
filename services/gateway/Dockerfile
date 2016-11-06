@@ -9,7 +9,7 @@ RUN ["npm", "install"]
 
 COPY defaults.json /src/
 COPY webpack.config.js /src/
-COPY server.js /src/
+COPY index.js /src/
 
 COPY public /src/
 COPY lib /src/
