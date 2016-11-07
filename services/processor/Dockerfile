@@ -6,4 +6,5 @@ COPY package.json /src/
 RUN ["npm", "install"]
 
 COPY index.js /src/
+COPY defaults.json /src/
 CMD ["node", "index.js"]
