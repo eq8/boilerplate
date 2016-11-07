@@ -5,4 +5,4 @@ import ReactDOM from 'react-dom';
 
 import App from './components/app/index.jsx';
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(React.createElement(App), document.getElementById('app'));
