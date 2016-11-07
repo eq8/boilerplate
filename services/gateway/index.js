@@ -38,9 +38,13 @@ var seneca = require('seneca')();
 seneca.use(require('seneca-beanstalk-transport'));
 var client = seneca.client({
 	type: 'beanstalk',
-	host: nconf.get('HOST_QUEUE')
+	host: nconf.get('QUEUE_HOST')
 });
-api.on('dispatch', client.act.bind(client));
+
+api.on('dispatch', function() {
+	this.logger.trace('dispatch:', arguments);
+	client.act.apply(client, arguments);
+});
 
 var app = express();
 

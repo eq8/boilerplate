@@ -2,6 +2,6 @@
 	"port": "8080",
 	"db": "eq8",
 	"log": "log",
-	"HOST_DB": "mysql",
-	"HOST_QUEUE": "beanstalkd"
+	"DB_HOST": "mysql",
+	"QUEUE_HOST": "beanstalkd"
 }

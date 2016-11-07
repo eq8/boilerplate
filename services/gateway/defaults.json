@@ -2,5 +2,5 @@
 	"port": 8080,
 	"secret": "secret",
 	"public": "./public",
-	"HOST_QUEUE": "beanstalkd"
+	"QUEUE_HOST": "beanstalkd"
 }

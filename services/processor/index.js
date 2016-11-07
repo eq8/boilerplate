@@ -6,13 +6,14 @@ nconf
 	.env()
 	.file({file: './defaults.json'});
 
-var knex = require('knex')(
+var knex = require('knex')({
 	client: 'mysql',
 	connection: {
-		host : nconf.get('HOST_DB'),
+		host : nconf.get('DB_HOST'),
+		user: nconf.get('DB_USER'),
 		database : nconf.get('db')
 	}
-);
+});
 
 var api = require('eq8-api')();
 var Rx = require('rx');
@@ -22,7 +23,7 @@ seneca.use(require('seneca-beanstalk-transport'));
 
 var listen = seneca.listen({
 	type: 'beanstalk',
-	host: nconf.get('HOST_QUEUE')
+	host: nconf.get('QUEUE_HOST')
 });
 
 api.on('subscribe', listen.add.bind(listen));
@@ -35,13 +36,15 @@ api.addRegistrar({
 					function(action) {
 						api.subscribe(action.pattern, function(msg, done) {
 							knex.transaction(function(trx) {
-								trx
+								var statement = trx
 									.insert({
-										desc: action.name,
-										msg: JSON.stringify(msg);
+										description: action.name,
+										message: JSON.stringify(msg)
 									})
-									.into(nconf.get('logtable'))
-									.asCallback();
+									.into(nconf.get('log'))
+
+								api.logger.trace('statement:', statement.toString());
+								statement.asCallback();
 
 								api.state({trx: trx}, msg, function(err) {
 									if(err) {
@@ -62,3 +65,18 @@ api.addRegistrar({
 		});
 	}
 });
+
+/*
+api.register({
+	actions: [
+		{
+			name: 'hello world',
+			pattern: {hello: 'world'},
+			handler: function(ctxt, action, done) {
+				console.log('action:', action);
+				done();
+			}
+		}
+	]
+});
+*/

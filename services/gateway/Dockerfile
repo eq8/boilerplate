@@ -14,4 +14,4 @@ COPY index.js /src/
 COPY public /src/
 COPY lib /src/
 
-CMD ["npm", "start"]
+CMD ["node", "index.js"]

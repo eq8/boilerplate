@@ -1,5 +1,3 @@
-var path = require('path');
-
 module.exports = {
 	entry: './lib/ui/index.jsx',
 	output: {
