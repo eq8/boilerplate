@@ -12,7 +12,7 @@ var express = require('express');
 var api = require('eq8')({
 	jwt: {secret: nconf.get('secret')},
 	handlers: {
-		async: function asyncHandler(ws, next) {
+		async: function asyncHandler(ws) {
 			var self = this;
 
 			ws.on('message', function messageHandler(message) {
@@ -28,7 +28,7 @@ var api = require('eq8')({
 				if(e) {
 					self.dispatch(e);
 				}
-			})
+			});
 		}
 	}
 });

@@ -1,0 +1,23 @@
+{
+  "name": "boilerplate",
+  "version": "0.0.0",
+  "description": "eq8 boilerplate",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eq8/boilerplate.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eq8/boilerplate/issues"
+  },
+  "homepage": "https://github.com/eq8/boilerplate#readme",
+  "devDependencies": {
+    "eslint": "3.9.1",
+    "eslint-plugin-react": "6.6.0"
+  }
+}

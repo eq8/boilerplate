@@ -30,6 +30,7 @@ api.on('subscribe', listen.add.bind(listen));
 
 api.addRegistrar({
 	actions: function(actions, callback, prior) {
+		// TODO: var done = _.once(callback);
 		prior(actions, function() {
 			Rx.Observable.from(actions)
 				.subscribe(
@@ -41,7 +42,7 @@ api.addRegistrar({
 										description: action.name,
 										message: JSON.stringify(msg)
 									})
-									.into(nconf.get('log'))
+									.into(nconf.get('log'));
 
 								api.logger.trace('statement:', statement.toString());
 								statement.asCallback();
@@ -56,8 +57,7 @@ api.addRegistrar({
 									setImmediate(done, err);
 								});
 							});
-
-						})
+						});
 					},
 					callback,
 					callback
