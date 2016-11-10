@@ -52,4 +52,8 @@ app.use(express.static(nconf.get('public')));
 
 app.use('/api', api.syncware);
 
-api.emit('listening', app.listen(nconf.get('port')));
+api.chainListener('request', function(req, res) {
+	app(req, res);
+});
+
+api.listen(nconf.get('port'));
