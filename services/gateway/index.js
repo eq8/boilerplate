@@ -19,8 +19,7 @@ var api = require('eq8')({
 				var e;
 				try {
 					e = JSON.parse(message);
-					e.user = ws.user;
-					e.view = ws.route;
+					e.user$ = ws.user;
 				} catch (ex) {
 					self.logger.error('WebSocket message was not in JSON', message);
 					ws.send(JSON.stringify({error: {status: '400', title: 'bad-request'}}));
