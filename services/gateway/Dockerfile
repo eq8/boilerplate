@@ -11,7 +11,7 @@ RUN ["npm", "install"]
 COPY defaults.json /src/
 COPY index.js /src/
 
-COPY public /src/
-COPY lib /src/
+COPY public /src/public
+COPY lib /src/lib
 
 CMD ["node", "index.js"]

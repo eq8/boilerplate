@@ -14,12 +14,19 @@ services:
     restart: always
     environment:
       - "MYSQL_ALLOW_EMPTY_PASSWORD=yes"
+  proxy:
+    build: services/proxy
+    image: eq8/proxy
+    restart: always
+    ports:
+     - "80:80"
+    links:
+     - gateway
+     - processor
   gateway:
     build: services/gateway
     image: eq8/gateway
     restart: always
-    ports:
-      - "8080:8080"
     links:
       - beanstalkd
       - elasticsearch
