@@ -45,7 +45,7 @@ api.addRegistrar({
 									.into(nconf.get('log'));
 
 								api.logger.trace('statement:', statement.toString());
-								statement.asCallback();
+								//statement.asCallback();
 
 								api.state({trx: trx}, msg, function(err) {
 									if(err) {
@@ -66,17 +66,34 @@ api.addRegistrar({
 	}
 });
 
-/*
-api.register({
-	actions: [
-		{
-			name: 'hello world',
-			pattern: {hello: 'world'},
-			handler: function(ctxt, action, done) {
-				console.log('action:', action);
-				done();
-			}
-		}
-	]
-});
-*/
+var http = require('http');
+var connect = require('connect');
+var RED = require('node-red');
+
+// Create an Express app
+var app = connect();
+
+// Create a server
+var server = http.createServer(app);
+
+// Create the settings object - see default settings.js file for other options
+var settings = {
+	httpAdminRoot:'/admin',
+	httpNodeRoot: '/admin/api',
+	logging: nconf.get('LOG_LEVEL'),
+	functionGlobalContext: { }    // enables global context
+};
+
+// Initialise the runtime with a server and settings
+RED.init(server,settings);
+
+// Serve the editor UI from /red
+app.use(settings.httpAdminRoot, RED.httpAdmin);
+
+// Serve the http nodes UI from /api
+app.use(settings.httpNodeRoot, RED.httpNode);
+
+server.listen(nconf.get('port'));
+
+// Start the runtime
+RED.start();
