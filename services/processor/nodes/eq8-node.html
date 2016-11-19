@@ -1,0 +1,42 @@
+<script type="text/javascript">
+    RED.nodes.registerType('eq8 action',{
+        category: 'input',
+        color: '#a6bbcf',
+        defaults: {
+          name: {value:""},
+          pattern: {
+            value: "{}",
+            required: true,
+            validate: function(pattern) {
+              try {
+                JSON.parse(pattern);
+                return true
+              } catch(e) {
+                return false;
+              }
+            }
+          }
+        },
+        inputs:0,
+        outputs:1,
+        icon: "inject.png",
+        label: function() {
+            return this.name||"eq8 action";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="eq8 action">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-pattern">Pattern</label>
+        <input type="text" id="node-input-pattern" placeholder="Pattern">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="eq8 action">
+    <p>Provides an input node for actions</p>
+</script>

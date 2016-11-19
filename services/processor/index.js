@@ -28,6 +28,8 @@ var listen = seneca.listen({
 listen.add({source: 'queue'}, function(msg, done) {
 	knex.transaction(function(trx) {
 		api.state({trx: trx, user: msg.user}, msg.body, function(err) {
+			done(JSON.stringify(err));
+
 			if(err) {
 				return trx.rollback();
 			}
@@ -35,8 +37,6 @@ listen.add({source: 'queue'}, function(msg, done) {
 			return trx.commit();
 		});
 	});
-
-	setImmediate(done);
 });
 
 var http = require('http');
@@ -53,8 +53,8 @@ var server = http.createServer(app);
 var settings = {
 	httpAdminRoot:'/admin',
 	httpNodeRoot: '/admin/api',
-	logging: nconf.get('LOG_LEVEL'),
-	functionGlobalContext: { }    // enables global context
+	nodesDir: '/src/nodes',
+	api: api
 };
 
 // Initialise the runtime with a server and settings

@@ -29,7 +29,8 @@ var api = require('eq8')({
 				if(msg.body) {
 					self.dispatch(msg, function(err) {
 						if(err) {
-							ws.send({error: err});
+							// TODO: api.logger.error(err.code);
+							ws.send(JSON.stringify({error: JSON.parse(err.code)}));
 						}
 					});
 				}

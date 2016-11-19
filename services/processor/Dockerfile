@@ -7,4 +7,5 @@ RUN ["npm", "install"]
 
 COPY index.js /src/
 COPY defaults.json /src/
+COPY nodes /src/nodes
 CMD ["node", "index.js"]
