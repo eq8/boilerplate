@@ -16,7 +16,6 @@ var knex = require('knex')({
 });
 
 var api = require('eq8-api')();
-var Rx = require('rx');
 
 var seneca = require('seneca')();
 seneca.use(require('seneca-beanstalk-transport'));
@@ -26,44 +25,18 @@ var listen = seneca.listen({
 	host: nconf.get('QUEUE_HOST')
 });
 
-api.on('subscribe', listen.add.bind(listen));
-
-api.addRegistrar({
-	actions: function(actions, callback, prior) {
-		// TODO: var done = _.once(callback);
-		prior(actions, function() {
-			Rx.Observable.from(actions)
-				.subscribe(
-					function(action) {
-						api.subscribe(action.pattern, function(msg, done) {
-							knex.transaction(function(trx) {
-								var statement = trx
-									.insert({
-										description: action.name,
-										message: JSON.stringify(msg)
-									})
-									.into(nconf.get('log'));
-
-								api.logger.trace('statement:', statement.toString());
-								//statement.asCallback();
-
-								api.state({trx: trx}, msg, function(err) {
-									if(err) {
-										trx.rollback();
-									} else {
-										trx.commit();
-									}
-
-									setImmediate(done, err);
-								});
-							});
-						});
-					},
-					callback,
-					callback
-				);
+listen.add({source: 'queue'}, function(msg, done) {
+	knex.transaction(function(trx) {
+		api.state({trx: trx, user: msg.user}, msg.body, function(err) {
+			if(err) {
+				return trx.rollback();
+			}
+			
+			return trx.commit();
 		});
-	}
+	});
+
+	setImmediate(done);
 });
 
 var http = require('http');

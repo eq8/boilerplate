@@ -16,17 +16,22 @@ var api = require('eq8')({
 			var self = this;
 
 			ws.on('message', function messageHandler(message) {
-				var e;
+				var msg = {};
 				try {
-					e = JSON.parse(message);
-					e.user$ = ws.user;
+					msg.source = 'queue';
+					msg.body = JSON.parse(message);
+					msg.user = ws.user;
 				} catch (ex) {
 					self.logger.error('WebSocket message was not in JSON', message);
 					ws.send(JSON.stringify({error: {status: '400', title: 'bad-request'}}));
 				}
 
-				if(e) {
-					self.dispatch(e);
+				if(msg.body) {
+					self.dispatch(msg, function(err) {
+						if(err) {
+							ws.send({error: err});
+						}
+					});
 				}
 			});
 		}
