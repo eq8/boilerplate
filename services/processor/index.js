@@ -28,12 +28,13 @@ var listen = seneca.listen({
 listen.add({source: 'queue'}, function(msg, done) {
 	knex.transaction(function(trx) {
 		api.state({trx: trx, user: msg.user}, msg.body, function(err) {
-			done(JSON.stringify(err));
-
 			if(err) {
+				done(JSON.stringify(err));
 				return trx.rollback();
 			}
 			
+			setImmediate(done);
+
 			return trx.commit();
 		});
 	});
