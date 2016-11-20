@@ -6,15 +6,6 @@ nconf
 	.env()
 	.file({file: './defaults.json'});
 
-var knex = require('knex')({
-	client: 'mysql',
-	connection: {
-		host : nconf.get('DB_HOST'),
-		user: nconf.get('DB_USER'),
-		database : nconf.get('db')
-	}
-});
-
 var api = require('eq8-api')();
 
 var seneca = require('seneca')();
@@ -26,17 +17,8 @@ var listen = seneca.listen({
 });
 
 listen.add({source: 'queue'}, function(msg, done) {
-	knex.transaction(function(trx) {
-		api.state({trx: trx, user: msg.user}, msg.body, function(err) {
-			if(err) {
-				done(JSON.stringify(err));
-				return trx.rollback();
-			}
-			
-			setImmediate(done);
-
-			return trx.commit();
-		});
+	api.state({user: msg.user}, msg.body, function(err) {
+		done(err ? JSON.stringify(err) : null);
 	});
 });
 
