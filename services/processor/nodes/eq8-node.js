@@ -3,8 +3,6 @@ module.exports = function(RED) {
 		var node = this;
 		var api = RED.settings.get('api');
 
-		RED.nodes.createNode(node, config);
-
 		var pattern = {};
 
 		try {
@@ -16,6 +14,7 @@ module.exports = function(RED) {
 		api.register({
 			actions: [
 				{
+					id: config.id,
 					name: config.name,
 					pattern: pattern,
 					handler: function(ctxt, action, done) {
@@ -36,6 +35,17 @@ module.exports = function(RED) {
 					}
 				}
 			]
+		}, function(err) {
+			if(err) {
+				RED.log.error(err);
+			}
+
+			RED.nodes.createNode(node, config);
+
+			node.on('close', function(done) {
+				api.deregister('actions', this.id);
+				done();
+			});
 		});
 	}
 
