@@ -19,11 +19,19 @@ module.exports = function(RED) {
 					name: config.name,
 					pattern: pattern,
 					handler: function(ctxt, action, done) {
+						var invoked = false;
+
 						node.send({
-							trx: ctxt.trx,
 							user: ctxt.user,
 							body: action,
-							commit: done
+							reply: function(err) {
+								if(!invoked) {
+									invoked = true;
+									done(err);
+								} else {
+									RED.log.error('`msg.reply` can only be invoked once');
+								}
+							}
 						});
 					}
 				}
