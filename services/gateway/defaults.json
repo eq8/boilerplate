@@ -1,6 +1,7 @@
 {
 	"port": 8080,
 	"secret": "secret",
-	"public": "./public",
+	"publicDir": "./public",
+	"apiRoot": "/api",
 	"QUEUE_HOST": "beanstalkd"
 }

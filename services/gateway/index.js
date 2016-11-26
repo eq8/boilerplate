@@ -53,9 +53,9 @@ api.on('dispatch', function() {
 
 var app = express();
 
-app.use(express.static(nconf.get('public')));
+app.use(express.static(nconf.get('publicDir')));
 
-app.use('/api', api.syncware);
+app.use(nconf.get('apiRoot'), api.syncware);
 
 api.chainListener('request', function(req, res) {
 	app(req, res);
