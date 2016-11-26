@@ -35,7 +35,6 @@ var server = http.createServer(app);
 // Create the settings object - see default settings.js file for other options
 var settings = {
 	httpAdminRoot:'/admin',
-	httpNodeRoot: '/admin/api',
 	nodesDir: '/src/nodes',
 	api: api
 };
@@ -43,11 +42,8 @@ var settings = {
 // Initialise the runtime with a server and settings
 RED.init(server,settings);
 
-// Serve the editor UI from /red
+// Serve the editor UI from /admin
 app.use(settings.httpAdminRoot, RED.httpAdmin);
-
-// Serve the http nodes UI from /api
-app.use(settings.httpNodeRoot, RED.httpNode);
 
 server.listen(nconf.get('port'));
 
