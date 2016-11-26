@@ -16,7 +16,12 @@ var listen = seneca.listen({
 	host: nconf.get('QUEUE_HOST')
 });
 
-listen.add({source: 'queue'}, function(msg, done) {
+api.on('subscribe', function() {
+	this.logger.trace('dispatch:', arguments);
+	listen.add.apply(listen, arguments);
+});
+
+api.subscribe({source: 'queue'}, function(msg, done) {
 	api.state({user: msg.user}, msg.body, function(err) {
 		done(err ? JSON.stringify(err) : null);
 	});
