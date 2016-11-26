@@ -41,6 +41,7 @@ var api = require('eq8')({
 
 var seneca = require('seneca')();
 seneca.use(require('seneca-beanstalk-transport'));
+
 var client = seneca.client({
 	type: 'beanstalk',
 	host: nconf.get('QUEUE_HOST')
@@ -57,6 +58,7 @@ app.use(express.static(nconf.get('publicDir')));
 
 app.use(nconf.get('apiRoot'), api.syncware);
 
+// done this way to ensure only 2 arguments are passed to `app`
 api.chainListener('request', function(req, res) {
 	app(req, res);
 });
