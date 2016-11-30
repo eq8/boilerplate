@@ -1,8 +1,12 @@
 {
-  "name": "gateway",
+  "name": "notifier",
   "main": "index.js",
   "private": true,
-  "scripts": {
-    "test": "tape test/test.*.js | faucet"
+  "dependencies": {
+    "eq8-api": "2.1.0",
+    "knex": "0.12.6",
+    "mysql": "2.11.1",
+    "nconf": "0.8.4",
+    "seneca": "3.2.2"
   }
 }

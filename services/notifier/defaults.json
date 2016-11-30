@@ -1,0 +1,6 @@
+{
+	"db": "eq8",
+	"log": "log",
+	"DB_HOST": "mysql",
+	"DB_USER": "root"
+}
