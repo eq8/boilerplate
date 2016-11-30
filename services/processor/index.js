@@ -21,7 +21,7 @@ api.on('subscribe', function() {
 	listen.add.apply(listen, arguments);
 });
 
-api.subscribe({source: 'queue'}, function(msg, done) {
+api.subscribe({to: 'queue'}, function(msg, done) {
 	api.state({user: msg.user}, msg.body, function(err) {
 		done(err ? JSON.stringify(err) : null);
 	});

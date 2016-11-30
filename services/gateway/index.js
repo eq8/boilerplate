@@ -18,7 +18,7 @@ var api = require('eq8')({
 			ws.on('message', function messageHandler(message) {
 				var msg = {};
 				try {
-					msg.source = 'queue';
+					msg.to = 'queue';
 					msg.body = JSON.parse(message);
 					msg.user = ws.user;
 				} catch (ex) {
