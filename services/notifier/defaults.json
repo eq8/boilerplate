@@ -2,5 +2,6 @@
 	"db": "eq8",
 	"log": "log",
 	"DB_HOST": "mysql",
-	"DB_USER": "root"
+	"DB_USER": "root",
+	"PUBSUB_HOST": "redis",
 }
