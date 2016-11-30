@@ -17,7 +17,7 @@ var listen = seneca.listen({
 });
 
 api.on('subscribe', function() {
-	this.logger.trace('dispatch:', arguments);
+	this.logger.trace('subscribe:', arguments);
 	listen.add.apply(listen, arguments);
 });
 
