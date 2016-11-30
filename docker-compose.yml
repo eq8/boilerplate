@@ -14,6 +14,7 @@ services:
     restart: always
     environment:
       - "MYSQL_ALLOW_EMPTY_PASSWORD=yes"
+      - "MYSQL_DATABASE=eq8"
   proxy:
     build: services/proxy
     image: eq8/proxy
@@ -53,3 +54,8 @@ services:
     links:
       - mysql
       - redis
+  migrator:
+    build: services/migrator
+    image: eq8/migrator
+    links:
+      - mysql

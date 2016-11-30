@@ -1,0 +1,12 @@
+{
+  "name": "migrator",
+  "private": true,
+  "scripts": {
+    "migrate": "knex migrate:latest"
+  },
+  "dependencies": {
+    "knex": "0.12.6",
+    "mysql": "2.11.1",
+    "nconf": "0.8.4"
+  }
+}
