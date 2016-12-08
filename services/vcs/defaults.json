@@ -1,0 +1,10 @@
+{
+	"db": "eq8",
+	"listenPort": "8080",
+	"clientHost": "notifier",
+	"clientPort": "8080",
+	"dbHost": "mysql",
+	"dbPort": "3306",
+	"dbUser": "root",
+	"migrationDir": "./migrations"
+}

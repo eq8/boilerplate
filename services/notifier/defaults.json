@@ -1,7 +1,6 @@
 {
 	"db": "eq8",
-	"log": "log",
+	"table": "versions",
 	"DB_HOST": "mysql",
-	"DB_USER": "root",
-	"PUBSUB_HOST": "redis",
+	"DB_USER": "root"
 }
