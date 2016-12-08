@@ -1,5 +1,6 @@
 {
 	"port": "8080",
-	"QUEUE_HOST": "beanstalkd",
-	"VCS_HOST": "vcs"
+	"listenHost": "beanstalkd",
+	"clientHost": "vcs",
+	"clientPort": "8080"
 }

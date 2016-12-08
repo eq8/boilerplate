@@ -3,7 +3,6 @@
 var nconf = require('nconf');
 nconf
 	.argv()
-	.env()
 	.file({file: './defaults.json'});
 
 var api = require('eq8-api')();
@@ -13,7 +12,12 @@ seneca.use(require('seneca-beanstalk-transport'));
 
 var listen = seneca.listen({
 	type: 'beanstalk',
-	host: nconf.get('QUEUE_HOST')
+	host: nconf.get('listenHost')
+});
+
+var client = seneca.client({
+	host: nconf.get('clientHost'),
+	port: nconf.get('clientPort')
 });
 
 api.on('subscribe', function() {
@@ -25,6 +29,11 @@ api.subscribe({to: 'queue'}, function(msg, done) {
 	api.state({user: msg.user}, msg.body, function(err) {
 		done(err ? JSON.stringify(err) : null);
 	});
+});
+
+api.on('dispatch', function() {
+	this.logger.trace('dispatch', arguments);
+	client.act.apply(client, arguments);
 });
 
 var http = require('http');
