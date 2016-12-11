@@ -38,13 +38,13 @@ api.on('subscribe', function() {
 
 api.subscribe({to: 'vcs'}, function(msg, done) {
 	knex.transaction(function(trx) {
-		var decompose = {
+		var commit = {
 			ns: 'vcs',
-			cmd: 'decompose',
+			cmd: 'commit',
 			type: 'transaction',
 			body: msg.body
 		};
-		api.state({trx: trx}, decompose, function(err) {
+		api.state({trx: trx}, commit, function(err) {
 			if(err) {
 				trx.rollback();
 				// TODO: queue an action to notify user that the recent action failed
@@ -60,8 +60,8 @@ var Rx = require('rx');
 api.register({
 	actions: [
 		{
-			name: 'decompose',
-			pattern: {ns: 'vcs', cmd: 'decompose', type: 'transaction'},
+			name: 'commit',
+			pattern: {ns: 'vcs', cmd: 'commit', type: 'transaction'},
 			handler: function(ctxt, args, done) {
 				var api = this;
 
@@ -94,10 +94,10 @@ api.register({
 TODO:
 create registrar for values
 - it should register some new views (eq8-api) which in turn registers new query types in graphql (eq8)
-- it should register decompose actions for the value
+- it should register commit actions for the value
 create registrar for entities
 - sample params: namespace, entity, version
-- it should register decompose actions for the entity
+- it should register commit actions for the entity
 create an action to register entities via messages
 register value types
 install seneca-knex-store
