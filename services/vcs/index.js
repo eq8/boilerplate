@@ -6,14 +6,14 @@ nconf
 	.file({file: './defaults.json'});
 
 var knex = require('knex')({
-  client: 'mysql',
-  connection: {
-    database: nconf.get('db'),
-    host: nconf.get('dbHost'),
-    port: nconf.get('dbPort'),
-    user: nconf.get('dbUser'),
-    password: nconf.get('dbPassword')
-  }
+	client: 'mysql',
+	connection: {
+		database: nconf.get('db'),
+		host: nconf.get('dbHost'),
+		port: nconf.get('dbPort'),
+		user: nconf.get('dbUser'),
+		password: nconf.get('dbPassword')
+	}
 });
 
 // TODO: add defaults for migration config
@@ -26,10 +26,12 @@ var listen = seneca.listen({
 	port: nconf.get('listenPort')
 });
 
+/*
 var client = seneca.client({
 	host: nconf.get('clientHost'),
 	port: nconf.get('clientPort')
 });
+*/
 
 api.on('subscribe', function() {
 	this.logger.trace('subscribe:', arguments);
@@ -52,10 +54,11 @@ api.subscribe({to: 'vcs'}, function(msg, done) {
 				trx.commit();
 			}
 		});
-	});
+	}).asCallback(done);
 });
 
 var Rx = require('rx');
+var _ = require('lodash');
 
 api.register({
 	actions: [
@@ -64,6 +67,7 @@ api.register({
 			pattern: {ns: 'vcs', cmd: 'commit', type: 'transaction'},
 			handler: function(ctxt, args, done) {
 				var api = this;
+				var callback = _.once(done);
 
 				Rx.Observable
 					.fromArray(Object.keys(args))
@@ -79,12 +83,16 @@ api.register({
 											id: id,
 											object: args.object[type][id]
 										}
-									)
+									);
 							});
 					})
-					.subscribeOnNext(function(denormalized) {
+					.subscribe(
+						function(/* denormalized */) {
 						// TODO: write denormalized in a log
-					});
+						},
+						callback,
+						callback
+					);
 			}
 		}
 	]
