@@ -26,13 +26,6 @@ var listen = seneca.listen({
 	port: nconf.get('listenPort')
 });
 
-/*
-var client = seneca.client({
-	host: nconf.get('clientHost'),
-	port: nconf.get('clientPort')
-});
-*/
-
 api.on('subscribe', function() {
 	this.logger.trace('subscribe:', arguments);
 	listen.add.apply(listen, arguments);
@@ -55,6 +48,16 @@ api.subscribe({to: 'vcs'}, function(msg, done) {
 			}
 		});
 	}).asCallback(done);
+});
+
+var client = seneca.client({
+	host: nconf.get('clientHost'),
+	port: nconf.get('clientPort')
+});
+
+api.on('dispatch', function() {
+	this.logger.trace('dispatch:', arguments);
+	client.act.apply(client, arguments);
 });
 
 var Rx = require('rx');
@@ -86,13 +89,16 @@ api.register({
 									);
 							});
 					})
-					.subscribe(
-						function(/* denormalized */) {
-						// TODO: write denormalized in a log
-						},
-						callback,
-						callback
-					);
+					.reduce(function(denormalized, entity) {
+						return _.merge({}, denormalized, entity);
+					}, {})
+					.subscribeOnNext(function(denormalized) {
+						api.dispatch({
+							to: 'indexer',
+							body: denormalized
+						}, callback);
+					})
+					.subscribeOnError(callback);
 			}
 		}
 	]
