@@ -1,11 +1,11 @@
 exports.up = function(knex, Promise) {
 	return Promise.all([
 		knex.schema.createTable('version', function(t) {
-			t.string('entity');
+			t.string('type');
 			t.uuid('id');
 			t.bigInteger('version');
 
-			t.unique(['entity', 'id', 'version']);
+			t.unique(['type', 'id', 'version']);
 		})
 	]);
 };
