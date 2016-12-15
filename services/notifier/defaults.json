@@ -1,6 +1,4 @@
 {
 	"db": "eq8",
-	"table": "versions",
-	"DB_HOST": "mysql",
-	"DB_USER": "root"
+	"listenPort": "8080"
 }

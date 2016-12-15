@@ -6,17 +6,18 @@ nconf
 	.env()
 	.file({file: './defaults.json'});
 
-var api = require('eq8-api')();
-
 var seneca = require('seneca')();
 seneca.use(require('seneca-redis-transport'));
 
-var client = seneca.client({
-	type: 'redis',
-	host: nconf.get('PUBSUB_HOST')
+var listen = seneca.listen({
+	port: nconf.get('listenPort')
 });
 
-api.on('dispatch', function() {
-	this.logger.trace('dispatch:', arguments);
-	client.act.apply(client, arguments);
+var client = seneca.client({
+	type: 'redis',
+	host: nconf.get('pubsubHost')
+});
+
+listen.add({to: 'notifier'}, function(msg, done) {
+	client.act(msg.body, done);
 });

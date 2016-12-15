@@ -94,7 +94,7 @@ api.register({
 					}, {})
 					.subscribeOnNext(function(denormalized) {
 						api.dispatch({
-							to: 'indexer',
+							to: 'notifier',
 							body: denormalized
 						}, callback);
 					})
