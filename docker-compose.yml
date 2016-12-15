@@ -15,12 +15,6 @@ services:
     environment:
       - "MYSQL_ALLOW_EMPTY_PASSWORD=yes"
       - "MYSQL_DATABASE=eq8"
-  vcs:
-    build: services/vcs
-    image: eq8/vcs
-    restart: always
-    links:
-     - mysql
   proxy:
     build: services/proxy
     image: eq8/proxy
@@ -45,13 +39,13 @@ services:
     links:
       - beanstalkd
       - vcs
-  notifier:
-    build: services/notifier
-    image: eq8/notifier
+  vcs:
+    build: services/vcs
+    image: eq8/vcs
     restart: always
     links:
-      - vcs
-      - redis
+     - mysql
+     - redis
   indexer:
     build: services/indexer
     image: eq8/indexer

@@ -20,9 +20,10 @@ var knex = require('knex')({
 knex.migrate.latest();
 
 var api = require('eq8-api')();
-var seneca = require('seneca')();
+var transport = require('seneca')();
+transport.use(require('seneca-redis-transport'));
 
-var listen = seneca.listen({
+var listen = transport.listen({
 	port: nconf.get('listenPort')
 });
 
@@ -50,9 +51,10 @@ api.subscribe({to: 'vcs'}, function(msg, done) {
 	}).asCallback(done);
 });
 
-var client = seneca.client({
-	host: nconf.get('clientHost'),
-	port: nconf.get('clientPort')
+var client = transport.client({
+	type: 'redis',
+	host: nconf.get('pubsubHost'),
+	port: nconf.get('pubsubPort')
 });
 
 api.on('dispatch', function() {
