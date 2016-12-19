@@ -9,6 +9,7 @@ var api = require('eq8-api')();
 
 var seneca = require('seneca')();
 seneca.use(require('seneca-beanstalk-transport'));
+seneca.use(require('seneca-redis-transport'));
 
 var listen = seneca.listen({
 	type: 'beanstalk',
@@ -16,8 +17,9 @@ var listen = seneca.listen({
 });
 
 var client = seneca.client({
-	host: nconf.get('clientHost'),
-	port: nconf.get('clientPort')
+	type: 'redis',
+	host: nconf.get('pubsubHost'),
+	port: nconf.get('pubsubPort')
 });
 
 api.on('subscribe', function() {

@@ -38,7 +38,7 @@ services:
     restart: always
     links:
       - beanstalkd
-      - vcs
+      - redis
   vcs:
     build: services/vcs
     image: eq8/vcs
@@ -46,10 +46,4 @@ services:
     links:
      - mysql
      - redis
-  indexer:
-    build: services/indexer
-    image: eq8/indexer
-    restart: always
-    links:
-      - redis
-      - elasticsearch
+     - elasticsearch

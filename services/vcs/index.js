@@ -22,14 +22,10 @@ knex.migrate.latest();
 var transport = require('seneca')();
 transport.use(require('seneca-redis-transport'));
 
-var client = transport.client({
+var listen = transport.listen({
 	type: 'redis',
 	host: nconf.get('pubsubHost'),
 	port: nconf.get('pubsubPort')
-});
-
-var listen = transport.listen({
-	port: nconf.get('listenPort')
 });
 
 var Rx = require('rx');
@@ -56,8 +52,7 @@ listen.add({to: 'vcs'}, function(msg, done) {
 			.subscribeOnError(callback)
 			.subscribeOnComplete(callback);
 	}).asCallback(function(err) {
-		if(err) return done(err);
-
-		client.act({to: 'all', items: msg.items}, done);
+		// Returns a 'promise' in a Paxos context where the VCS is an Acceptor
+		done(err, {promise: !err});
 	});
 });

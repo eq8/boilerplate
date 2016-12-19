@@ -1,5 +1,6 @@
 {
-	"listenPort": "8080",
+	"indexHost": "elasticsearch",
+	"indexPort": "9200",
 	"pubsubHost": "redis",
 	"pubsubPort": "6379",
 	"db": "eq8",

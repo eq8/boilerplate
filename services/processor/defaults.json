@@ -1,6 +1,6 @@
 {
 	"port": "8080",
 	"listenHost": "beanstalkd",
-	"clientHost": "vcs",
-	"clientPort": "8080"
+	"pubsubHost": "redis",
+	"pubsubPort": "6379"
 }
