@@ -4,14 +4,10 @@ EXPOSE 8080
 
 WORKDIR /src
 
-COPY webpack.config.js /src/
 COPY package.json /src/
 RUN ["npm", "install"]
 
 COPY defaults.json /src/
 COPY index.js /src/
-
-COPY public /src/public
-COPY lib /src/lib
 
 CMD ["node", "index.js"]

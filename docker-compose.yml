@@ -22,8 +22,13 @@ services:
     ports:
      - "80:80"
     links:
+     - assets
      - gateway
      - logic
+  assets:
+    build: services/assets
+    image: eq8/assets
+    restart: always
   gateway:
     build: services/gateway
     image: eq8/gateway
