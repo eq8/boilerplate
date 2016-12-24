@@ -7,6 +7,6 @@
     "express": "4.14.0",
     "nconf": "0.8.4",
     "seneca": "3.2.2",
-    "seneca-beanstalk-transport": "0.2.1"
+    "seneca-amqp-transport": "2.1.0"
   }
 }

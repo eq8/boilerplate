@@ -3,5 +3,5 @@
 	"secret": "secret",
 	"publicDir": "./public",
 	"apiRoot": "/api",
-	"QUEUE_HOST": "beanstalkd"
+	"clientUrl": "amqp://guest:guest@rabbitmq:5672"
 }

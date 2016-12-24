@@ -8,12 +8,13 @@ nconf
 var api = require('eq8-api')();
 
 var seneca = require('seneca')();
-seneca.use(require('seneca-beanstalk-transport'));
+seneca.use(require('seneca-amqp-transport'));
 seneca.use(require('seneca-redis-transport'));
 
 var listen = seneca.listen({
-	type: 'beanstalk',
-	host: nconf.get('listenHost')
+	type: 'amqp',
+	host: nconf.get('listenUrl'),
+	pin: 'to:queue'
 });
 
 var client = seneca.client({

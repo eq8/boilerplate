@@ -1,7 +1,7 @@
 version: '2'
 services:
-  beanstalkd:
-    image: bbartolome/beanstalkd
+  rabbitmq:
+    image: rabbitmq
     restart: always
   elasticsearch:
     image: elasticsearch
@@ -34,7 +34,7 @@ services:
     image: eq8/gateway
     restart: always
     links:
-      - beanstalkd
+      - rabbitmq
       - elasticsearch
       - redis
   logic:
@@ -42,7 +42,7 @@ services:
     image: eq8/logic
     restart: always
     links:
-      - beanstalkd
+      - rabbitmq
       - redis
   vcs:
     build: services/vcs

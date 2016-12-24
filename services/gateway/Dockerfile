@@ -4,10 +4,11 @@ EXPOSE 8080
 
 WORKDIR /src
 
-COPY package.json /src/
+COPY package.json /src/package.json
 RUN ["npm", "install"]
 
-COPY defaults.json /src/
-COPY index.js /src/
+COPY public /src/public
+COPY defaults.json /src/defaults.json
+COPY index.js /src/index.js
 
 CMD ["node", "index.js"]

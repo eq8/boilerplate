@@ -40,11 +40,12 @@ var api = require('eq8')({
 });
 
 var seneca = require('seneca')();
-seneca.use(require('seneca-beanstalk-transport'));
+seneca.use(require('seneca-amqp-transport'));
 
 var client = seneca.client({
-	type: 'beanstalk',
-	host: nconf.get('QUEUE_HOST')
+	type: 'amqp',
+	host: nconf.get('clientUrl'),
+	pin: 'to:queue'
 });
 
 api.on('dispatch', function() {

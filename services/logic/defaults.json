@@ -1,6 +1,6 @@
 {
 	"port": "8080",
-	"listenHost": "beanstalkd",
+	"listenUrl": "amqp://guest:guest@rabbitmq:5672",
 	"pubsubHost": "redis",
 	"pubsubPort": "6379"
 }
