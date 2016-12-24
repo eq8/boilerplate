@@ -23,7 +23,7 @@ services:
      - "80:80"
     links:
      - gateway
-     - processor
+     - logic
   gateway:
     build: services/gateway
     image: eq8/gateway
@@ -32,9 +32,9 @@ services:
       - beanstalkd
       - elasticsearch
       - redis
-  processor:
-    build: services/processor
-    image: eq8/processor
+  logic:
+    build: services/logic
+    image: eq8/logic
     restart: always
     links:
       - beanstalkd
