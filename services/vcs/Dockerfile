@@ -1,8 +1,10 @@
-FROM node:4.6.0
+FROM node:6.9.2-alpine
 
 ENV DB_HOST mysql
 ENV DB_PORT 3306
 ENV DB_USER root
+
+RUN apk add --update bash && rm -rf /var/cache/apk/*
 
 WORKDIR /src
 
