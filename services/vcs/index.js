@@ -35,24 +35,22 @@ listen.add({to: 'vcs'}, function(msg, done) {
 	var callback = _.once(done);
 
 	knex.transaction(function(trx) {
-		Rx.Observable
+		return Rx.Observable
 			.fromArray(msg.items)
 			.concatMap(function(item) {
-				var insert = ctx.trx
-				insert({
+				var insert = trx.insert({
 					type: item._type,
 					id: item._id,
 					version: item._version
 				})
 				.into('version');
 
-				return Rx.Observable
-					.fromNodeCallback(insert.asCallback, insert);
+				return Rx.Observable.fromNodeCallback(insert.asCallback, insert)();
 			})
-			.subscribeOnError(callback)
-			.subscribeOnComplete(callback);
-	}).asCallback(function(err) {
-		// Returns a 'promise' in a Paxos context where the VCS is an Acceptor
-		done(err, {promise: !err});
-	});
+			.subscribeOnCompleted(function onCompleted() {
+				trx.commit();
+			});
+	})
+	.then(callback)
+	.catch(callback);
 });
