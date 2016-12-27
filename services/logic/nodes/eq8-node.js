@@ -1,5 +1,5 @@
 module.exports = function(RED) {
-	function action(config) {
+	function input(config) {
 		var node = this;
 		var api = RED.settings.get('api');
 
@@ -18,20 +18,12 @@ module.exports = function(RED) {
 					name: config.name,
 					pattern: pattern,
 					handler: function(ctxt, action, done) {
-						var invoked = false;
-
 						node.send({
 							user: ctxt.user,
-							body: action,
-							reply: function(err) {
-								if(!invoked) {
-									invoked = true;
-									done(err);
-								} else {
-									RED.log.error('`msg.reply` can only be invoked once');
-								}
-							}
+							body: action
 						});
+
+						setImmediate(done);
 					}
 				}
 			]
@@ -49,5 +41,18 @@ module.exports = function(RED) {
 		});
 	}
 
-	RED.nodes.registerType('eq8 action', action);
+	function output() {
+		var node = this;
+		var api = RED.settings.get('api');
+
+		node.on('input', function(msg) {
+			api.dispatch({
+				to: 'vcs',
+				items: msg.items
+			});
+		});
+	}
+
+	RED.nodes.registerType('eq8 input', input);
+	RED.nodes.registerType('eq8 output', output);
 };
