@@ -46,10 +46,7 @@ listen.add({to: 'vcs'}, function(msg, done) {
 				.into('version');
 
 				return Rx.Observable.fromNodeCallback(insert.asCallback, insert)();
-			})
-			.subscribeOnCompleted(function onCompleted() {
-				trx.commit();
-			});
+			}).toPromise();
 	})
 	.then(callback)
 	.catch(callback);
