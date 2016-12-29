@@ -13,7 +13,7 @@ seneca.use(require('seneca-amqp-transport'));
 var listen = seneca.listen({
 	type: 'amqp',
 	host: nconf.get('queueUrl'),
-	pin: 'to:queue',
+	pin: 'to:logic',
 	listen: {
 		queues: {
 			durable: false
@@ -32,7 +32,7 @@ api.on('subscribe', function() {
 	listen.add.apply(listen, arguments);
 });
 
-api.subscribe({to: 'queue'}, function(msg, done) {
+api.subscribe({to: 'logic'}, function(msg, done) {
 	api.state({user: msg.user}, msg.body, function(err) {
 		done(err ? JSON.stringify(err) : null);
 	});

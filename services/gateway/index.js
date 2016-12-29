@@ -18,7 +18,7 @@ var api = require('eq8')({
 			ws.on('message', function messageHandler(message) {
 				var msg = {};
 				try {
-					msg.to = 'queue';
+					msg.to = 'logic';
 					msg.body = JSON.parse(message);
 					msg.user = ws.user;
 				} catch (ex) {
@@ -45,7 +45,7 @@ seneca.use(require('seneca-amqp-transport'));
 var client = seneca.client({
 	type: 'amqp',
 	host: nconf.get('clientUrl'),
-	pin: 'to:queue'
+	pin: 'to:logic'
 });
 
 api.on('dispatch', function() {
