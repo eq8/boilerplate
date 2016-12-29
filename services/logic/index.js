@@ -9,18 +9,17 @@ var api = require('eq8-api')();
 
 var seneca = require('seneca')();
 seneca.use(require('seneca-amqp-transport'));
-seneca.use(require('seneca-redis-transport'));
 
 var listen = seneca.listen({
 	type: 'amqp',
-	host: nconf.get('listenUrl'),
+	host: nconf.get('queueUrl'),
 	pin: 'to:queue'
 });
 
 var client = seneca.client({
-	type: 'redis',
-	host: nconf.get('pubsubHost'),
-	port: nconf.get('pubsubPort')
+	type: 'amqp',
+	host: nconf.get('queueUrl'),
+	pin: 'to:vcs'
 });
 
 api.on('subscribe', function() {

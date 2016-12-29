@@ -7,5 +7,6 @@
 	"dbHost": "mysql",
 	"dbPort": "3306",
 	"dbUser": "root",
-	"migrationDir": "./migrations"
+	"migrationDir": "./migrations",
+	"queueUrl": "amqp://guest:guest@rabbitmq:5672"
 }

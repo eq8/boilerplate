@@ -1,6 +1,4 @@
 {
 	"port": "8080",
-	"listenUrl": "amqp://guest:guest@rabbitmq:5672",
-	"pubsubHost": "redis",
-	"pubsubPort": "6379"
+	"queueUrl": "amqp://guest:guest@rabbitmq:5672"
 }
