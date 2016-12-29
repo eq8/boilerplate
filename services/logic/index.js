@@ -13,7 +13,12 @@ seneca.use(require('seneca-amqp-transport'));
 var listen = seneca.listen({
 	type: 'amqp',
 	host: nconf.get('queueUrl'),
-	pin: 'to:queue'
+	pin: 'to:queue',
+	listen: {
+		queues: {
+			durable: false
+		}
+	}
 });
 
 var client = seneca.client({
