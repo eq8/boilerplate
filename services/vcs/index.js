@@ -21,25 +21,25 @@ knex.migrate.latest();
 
 var transport = require('seneca')();
 transport.use(require('seneca-amqp-transport'));
+transport.use(require('seneca-redis-transport'));
 
-transport.listen({
+var listen = transport.listen({
 	type: 'amqp',
 	host: nconf.get('queueUrl'),
 	pin: 'to:vcs'
 });
 
-/*
 var client = transport.client({
 	type: 'redis',
 	host: nconf.get('pubsubHost'),
-	port: nconf.get('pubsubPort')
+	port: nconf.get('pubsubPort'),
+	pin: 'to:indexer'
 });
-*/
 
 var Rx = require('rx');
 var _ = require('lodash');
 
-transport.add({to: 'vcs'}, function(msg, done) {
+listen.add({to: 'vcs'}, function(msg, done) {
 	var callback = _.once(_.ary(done, 0));
 
 	knex.transaction(function(trx) {
@@ -57,6 +57,8 @@ transport.add({to: 'vcs'}, function(msg, done) {
 			})
 			.toPromise();
 	})
-	.then(callback)
+	.then(function() {
+		client.act({to: 'indexer', items: msg.items}, callback);
+	})
 	.catch(callback);
 });

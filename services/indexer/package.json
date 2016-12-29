@@ -1,0 +1,12 @@
+{
+  "name": "vcs",
+  "main": "index.js",
+  "private": true,
+  "dependencies": {
+    "lodash": "4.17.2",
+    "nconf": "0.8.4",
+    "rx": "4.1.0",
+    "seneca": "3.1.0",
+    "seneca-redis-transport": "0.3.0"
+  }
+}

@@ -3,18 +3,18 @@ services:
   rabbitmq:
     image: rabbitmq
     restart: always
-  elasticsearch:
-    image: elasticsearch
-    restart: always
-  redis:
-    image: redis
-    restart: always
   mysql:
     image: mysql
     restart: always
     environment:
       - "MYSQL_ALLOW_EMPTY_PASSWORD=yes"
       - "MYSQL_DATABASE=eq8"
+  redis:
+    image: redis
+    restart: always
+  elasticsearch:
+    image: elasticsearch
+    restart: always
   proxy:
     build: services/proxy
     image: eq8/proxy
@@ -51,3 +51,10 @@ services:
      - mysql
      - rabbitmq
      - redis
+  indexer:
+    build: services/indexer
+    image: eq8/indexer
+    restart: always
+    links:
+     - redis
+     - elasticsearch
