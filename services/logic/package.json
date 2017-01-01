@@ -9,6 +9,9 @@
     "nconf": "0.8.4",
     "node-red": "0.15.2",
     "node-red-contrib-aws": "0.1.3",
+    "passport": "0.3.2",
+    "passport-anonymous": "1.0.1",
+    "passport-jwt": "2.2.1",
     "seneca": "3.2.2",
     "seneca-amqp-transport": "2.1.0"
   }

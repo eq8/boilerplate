@@ -1,5 +1,22 @@
 {
 	"apiRoot": "/api",
+	"jwt": {
+		"secret": "secret",
+		"sign": {
+			"algorithm": "HS256"
+		},
+		"verify": {
+			"algorithms": ["HS256"]
+		},
+		"users": {
+			"anon": {
+				"roles": ["anon"]
+			},
+			"root": {
+				"roles": ["root"]
+			}
+		}
+	},
 	"port": "8080",
 	"queueUrl": "amqp://guest:guest@rabbitmq:5672"
 }
