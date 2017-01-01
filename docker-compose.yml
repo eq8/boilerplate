@@ -23,26 +23,18 @@ services:
      - "80:80"
     links:
      - assets
-     - gateway
      - logic
   assets:
     build: services/assets
     image: eq8/assets
     restart: always
-  gateway:
-    build: services/gateway
-    image: eq8/gateway
-    restart: always
-    links:
-      - rabbitmq
-      - elasticsearch
-      - redis
   logic:
     build: services/logic
     image: eq8/logic
     restart: always
     links:
       - rabbitmq
+      - elasticsearch
   vcs:
     build: services/vcs
     image: eq8/vcs

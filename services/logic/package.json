@@ -3,6 +3,7 @@
   "main": "index.js",
   "private": true,
   "dependencies": {
+    "body-parser": "1.15.2",
     "connect": "3.5.0",
     "eq8-api": "2.1.0",
     "nconf": "0.8.4",

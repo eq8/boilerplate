@@ -1,4 +1,5 @@
 {
+	"apiRoot": "/api",
 	"port": "8080",
 	"queueUrl": "amqp://guest:guest@rabbitmq:5672"
 }

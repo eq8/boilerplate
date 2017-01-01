@@ -1,7 +1,0 @@
-{
-	"port": 8080,
-	"secret": "secret",
-	"publicDir": "./public",
-	"apiRoot": "/api",
-	"clientUrl": "amqp://guest:guest@rabbitmq:5672"
-}
