@@ -22,10 +22,10 @@ api.on('dispatch', function() {
 });
 
 var http = require('http');
-var connect = require('connect');
+var express = require('express');
 var RED = require('node-red');
 
-var app = connect();
+var app = express();
 var bodyParser = require('body-parser');
 var server = http.createServer(app);
 
@@ -70,20 +70,33 @@ app.use(function initAnonymousUser(req, res, next) {
 
 app.use(nconf.get('apiRoot'), bodyParser.json());
 
-app.use(settings.httpAdminRoot, RED.httpAdmin);
-
-app.use(nconf.get('apiRoot') + '/actions', function(req, res, next) {
-	api.state({user: req.user}, req.body);
-	next();
-});
-
 app.use(function(error, req, res, next) {
 	if(error) {
-		res.statusCode = 500;
-		res.end();
+		res.status(500).end();
 	} else {
 		next();
 	}
+});
+
+app.use(settings.httpAdminRoot, RED.httpAdmin);
+
+app.get(nconf.get('apiRoot'), function(req, res) {
+	api.express({user: req.user}, req.query, function done(err, result) {
+		if (err) {
+			res.status(500);
+		}
+
+		if(result) {
+			res.json(result);
+		}
+
+		res.end();
+	});
+});
+
+app.post(nconf.get('apiRoot'), function(req, res) {
+	api.state({user: req.user}, req.body);
+	res.end();
 });
 
 server.listen(nconf.get('port'));

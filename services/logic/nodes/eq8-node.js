@@ -1,5 +1,5 @@
 module.exports = function(RED) {
-	function input(config) {
+	function mutation(config) {
 		var node = this;
 		var api = RED.settings.get('api');
 
@@ -41,6 +41,47 @@ module.exports = function(RED) {
 		});
 	}
 
+	function query(config) {
+		var node = this;
+		var api = RED.settings.get('api');
+
+		var pattern = {};
+
+		try {
+			pattern = JSON.parse(config.pattern);
+		} catch(e) {
+			RED.log.error(e);
+		}
+
+		api.register({
+			views: [
+				{
+					id: config.id,
+					name: config.name,
+					pattern: pattern,
+					handler: function(ctxt, view, done) {
+						node.send({
+							user: ctxt.user,
+							body: view,
+							callback: done
+						});
+					}
+				}
+			]
+		}, function(err) {
+			if(err) {
+				RED.log.error(err);
+			}
+
+			RED.nodes.createNode(node, config);
+
+			node.on('close', function(done) {
+				api.deregister('views', this.id);
+				done();
+			});
+		});
+	}
+
 	function output() {
 		var node = this;
 		var api = RED.settings.get('api');
@@ -53,6 +94,7 @@ module.exports = function(RED) {
 		});
 	}
 
-	RED.nodes.registerType('eq8 input', input);
+	RED.nodes.registerType('eq8 mutation', mutation);
+	RED.nodes.registerType('eq8 query', query);
 	RED.nodes.registerType('eq8 output', output);
 };

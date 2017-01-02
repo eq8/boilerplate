@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('eq8 input',{
+    RED.nodes.registerType('eq8 mutation',{
         category: 'input',
         color: '#a6bbcf',
         defaults: {
@@ -21,12 +21,12 @@
         outputs:1,
         icon: "inject.png",
         label: function() {
-            return this.name||"eq8 input";
+            return this.name||"eq8 mutation";
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="eq8 input">
+<script type="text/x-red" data-template-name="eq8 mutation">
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -37,8 +37,51 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="eq8 input">
-    <p>eq8 input node</p>
+<script type="text/x-red" data-help-name="eq8 mutation">
+    <p>eq8 mutation node</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('eq8 query',{
+        category: 'input',
+        color: '#a6bbcf',
+        defaults: {
+          name: {value:"", required: true},
+          pattern: {
+            value: "{}",
+            required: true,
+            validate: function(pattern) {
+              try {
+                JSON.parse(pattern);
+                return true
+              } catch(e) {
+                return false;
+              }
+            }
+          }
+        },
+        inputs:0,
+        outputs:1,
+        icon: "inject.png",
+        label: function() {
+            return this.name||"eq8 query";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="eq8 query">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-pattern">Pattern</label>
+        <input type="text" id="node-input-pattern" placeholder="Pattern">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="eq8 query">
+    <p>eq8 query node</p>
 </script>
 
 <script type="text/javascript">

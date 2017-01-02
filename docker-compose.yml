@@ -32,6 +32,8 @@ services:
     build: services/logic
     image: eq8/logic
     restart: always
+    environment:
+     - "LOG_LEVEL=trace"
     links:
       - rabbitmq
       - elasticsearch
