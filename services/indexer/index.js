@@ -12,7 +12,7 @@ var listen = transport.listen({
 	type: 'redis',
 	host: nconf.get('pubsubHost'),
 	port: nconf.get('pubsubPort'),
-	pin: 'to:indexer'
+	pin: 'to:broadcast'
 });
 
 /*
@@ -20,7 +20,7 @@ var Rx = require('rx');
 var _ = require('lodash');
 */
 
-listen.add({to: 'indexer'}, function(msg, done) {
+listen.add({to: 'broadcast'}, function(msg, done) {
 	console.log('msg:', msg);
 	done();
 });
