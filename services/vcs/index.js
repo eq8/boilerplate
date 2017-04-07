@@ -33,7 +33,7 @@ var client = transport.client({
 	type: 'redis',
 	host: nconf.get('pubsubHost'),
 	port: nconf.get('pubsubPort'),
-	pin: 'to:indexer'
+	pin: 'to:broadcast'
 });
 
 var Rx = require('rx');
@@ -58,7 +58,7 @@ listen.add({to: 'vcs'}, function(msg, done) {
 			.toPromise();
 	})
 	.then(function() {
-		client.act({to: 'indexer', items: msg.items}, callback);
+		client.act({to: 'broadcast', items: msg.items}, callback);
 	})
 	.catch(callback);
 });
