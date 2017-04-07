@@ -3,7 +3,7 @@
 	"indexPort": "9200",
 	"pubsubHost": "redis",
 	"pubsubPort": "6379",
-	"db": "eq8",
+	"dbName": "eq8",
 	"dbHost": "mysql",
 	"dbPort": "3306",
 	"dbUser": "root",

@@ -8,7 +8,7 @@ nconf
 var knex = require('knex')({
 	client: 'mysql',
 	connection: {
-		database: nconf.get('db'),
+		database: nconf.get('dbName'),
 		host: nconf.get('dbHost'),
 		port: nconf.get('dbPort'),
 		user: nconf.get('dbUser'),

@@ -17,4 +17,4 @@ COPY ./defaults.json /src
 COPY ./migrations /src/migrations
 COPY ./index.js /src
 
-CMD ./wait-for-it.sh ${DB_HOST}:${DB_PORT} --timeout=0 -- node index.js --dbHost ${DB_HOST} --dbPort ${DB_PORT} --dbUser ${DB_USER}
+CMD ./wait-for-it.sh ${DB_HOST}:${DB_PORT} --timeout=0 -- node index.js --dbHost ${DB_HOST} --dbPort ${DB_PORT} --dbName ${DB_NAME} --dbUser ${DB_USER}
