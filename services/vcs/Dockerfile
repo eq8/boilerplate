@@ -3,6 +3,7 @@ FROM node:6.9.2-alpine
 ENV DB_HOST mysql
 ENV DB_PORT 3306
 ENV DB_USER root
+ENV DB_NAME eq8
 
 RUN apk add --update bash && rm -rf /var/cache/apk/*
 
