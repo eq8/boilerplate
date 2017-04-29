@@ -4,7 +4,7 @@ services:
     image: rabbitmq:3.6.9-alpine
     restart: always
   mysql:
-    image: mysql:8.0.1
+    image: mysql:5.7.18
     restart: always
     environment:
       - "MYSQL_ALLOW_EMPTY_PASSWORD=yes"
