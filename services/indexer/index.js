@@ -17,7 +17,7 @@ var listen = transport.listen({
 
 var Rx = require('rx');
 var _ = require('lodash');
-var elasticsearch = require('elasticsearch')
+var elasticsearch = require('elasticsearch');
 var hostString = nconf.get('indexHost') + ':' + nconf.get('indexPort');
 var client = new elasticsearch.Client({
 	host: hostString
@@ -28,15 +28,15 @@ listen.add({to: 'broadcast'}, function(msg, done) {
 	Rx.Observable
 		.from(msg.items)
 		.map(item => {
-			return item[indexKey]
+			return item[indexKey];
 		})
 		.reduce((item, currentValue) => {
 			if(_.has(item, 'schemaVersion')) {
 				switch(item.schemaVersion) {
-					case '0.1':
-					default:
-						currentValue = _.concat(currentValue, item.bulkItems)
-						break;
+				case '0.1':
+				default:
+					currentValue = _.concat(currentValue, item.bulkItems);
+					break;
 				}
 			}
 			return currentValue;
