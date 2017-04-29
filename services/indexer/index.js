@@ -41,14 +41,7 @@ listen.add({to: 'broadcast'}, function(msg, done) {
 			}
 			return currentValue;
 		}, [])
-		.concatMap(bulkItems => {
-			return Rx.Observable
-				.fromNodeCallback(client.bulk, client)(bulkItems);
-		})
-		.subscribeOnError(err => {
-			done(err);
-		})
-		.subscribeOnCompleted(() => {
-			done();
+		.subscribeOnNext(bulkItems => {
+			client.bulk({body: bulkItems}, done);
 		});
 });
