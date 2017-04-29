@@ -12,4 +12,4 @@ COPY ./wait-for-it.sh /src
 COPY defaults.json /src/defaults.json
 COPY index.js /src/index.js
 
-CMD ./wait-for-it.sh ${INDEX_HOST}:${INDEX_PORT} --timeout=0 -- node index.js --indexHost ${ES_HOST} --indexPort ${INDEX_PORT} --dbUser ${DB_USER}
+CMD ./wait-for-it.sh ${INDEX_HOST}:${INDEX_PORT} --timeout=0 -- node index.js --indexHost ${INDEX_HOST} --indexPort ${INDEX_PORT}
