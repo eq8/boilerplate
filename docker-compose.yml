@@ -1,19 +1,19 @@
 version: '2'
 services:
   rabbitmq:
-    image: rabbitmq
+    image: rabbitmq:3.6.9-alpine
     restart: always
   mysql:
-    image: mysql
+    image: mysql:8.0.1
     restart: always
     environment:
       - "MYSQL_ALLOW_EMPTY_PASSWORD=yes"
       - "MYSQL_DATABASE=eq8"
   redis:
-    image: redis
+    image: redis:3.2.8-alpine
     restart: always
   elasticsearch:
-    image: elasticsearch
+    image: elasticsearch:5.3.1
     restart: always
   proxy:
     build: services/proxy
