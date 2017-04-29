@@ -1,6 +1,7 @@
 {
 	"indexHost": "elasticsearch",
 	"indexPort": "9200",
+	"indexName": "index",
 	"pubsubHost": "redis",
 	"pubsubPort": "6379"
 }
