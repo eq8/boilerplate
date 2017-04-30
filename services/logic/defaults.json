@@ -1,5 +1,6 @@
 {
 	"apiRoot": "/api",
+	"adminRoot": "/admin",
 	"jwt": {
 		"secret": "secret",
 		"sign": {

@@ -36,7 +36,7 @@ var ExtractJwt = require('passport-jwt').ExtractJwt;
 
 // Create the settings object - see default settings.js file for other options
 var settings = {
-	httpAdminRoot:'/admin',
+	httpAdminRoot: nconf.get('adminRoot'),
 	nodesDir: '/src/nodes',
 	api: api
 };
