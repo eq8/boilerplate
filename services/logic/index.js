@@ -5,8 +5,10 @@ nconf
 	.argv()
 	.file({file: './defaults.json'});
 
+// create and initialize an eq8-api object to be passed as a context for node-red
 var api = require('eq8-api')();
 
+// create a seneca transport client to the version control service (VCS) via rabbitmq
 var seneca = require('seneca')();
 seneca.use(require('seneca-amqp-transport'));
 
@@ -16,33 +18,34 @@ var client = seneca.client({
 	pin: 'to:vcs'
 });
 
+// when a node-red message is routed to an eq8 output node, it triggers a `dispatch` event
+// we listen to that dispatch event and forward it to the seneca transport client
 api.on('dispatch', function() {
 	this.logger.trace('dispatch', arguments);
 	client.act.apply(client, arguments);
 });
 
-var http = require('http');
-var express = require('express');
-var RED = require('node-red');
-
-var app = express();
-var bodyParser = require('body-parser');
-var server = http.createServer(app);
-
-var passport = require('passport');
-var AnonymousStrategy = require('passport-anonymous').Strategy;
-var JwtStrategy = require('passport-jwt').Strategy;
-var ExtractJwt = require('passport-jwt').ExtractJwt;
-
-// Create the settings object - see default settings.js file for other options
+// initialize settings object for node-red
 var settings = {
 	httpAdminRoot: nconf.get('adminRoot'),
 	nodesDir: '/src/nodes',
 	api: api
 };
 
-// Initialise the runtime with a server and settings
+// initialize server to be used with node-red
+var express = require('express');
+var app = express();
+var http = require('http');
+var server = http.createServer(app);
+
+var RED = require('node-red');
 RED.init(server, settings);
+
+// use JWT strategy for authentication
+var passport = require('passport');
+var AnonymousStrategy = require('passport-anonymous').Strategy;
+var JwtStrategy = require('passport-jwt').Strategy;
+var ExtractJwt = require('passport-jwt').ExtractJwt;
 
 var passportJwtOptions = {
 	secretOrKey: nconf.get('jwt:secret'),
@@ -56,6 +59,8 @@ var passportJwtOptions = {
 passport.use(new JwtStrategy(passportJwtOptions, function(payload, done) {
 	done(null, payload);
 }));
+
+// also allow anonymous user
 passport.use(new AnonymousStrategy());
 
 app.use(passport.initialize());
@@ -68,8 +73,11 @@ app.use(function initAnonymousUser(req, res, next) {
 	next();
 });
 
+// include body-parser middleware for parsing json for the apiRoot
+var bodyParser = require('body-parser');
 app.use(nconf.get('apiRoot'), bodyParser.json());
 
+// throw an error 500 if json was invalid
 app.use(function(error, req, res, next) {
 	if(error) {
 		res.status(500).end();
@@ -78,8 +86,10 @@ app.use(function(error, req, res, next) {
 	}
 });
 
+// create node-red admin route
 app.use(settings.httpAdminRoot, RED.httpAdmin);
 
+// map GET /<apiRoot> requests to api.express calls
 app.get(nconf.get('apiRoot'), function(req, res) {
 	api.express({user: req.user}, req.query, function done(err, result) {
 		if (err) {
@@ -94,6 +104,7 @@ app.get(nconf.get('apiRoot'), function(req, res) {
 	});
 });
 
+// map GET /<apiRoot> requests to api.state calls
 app.post(nconf.get('apiRoot'), function(req, res) {
 	api.state({user: req.user}, req.body);
 	res.end();
