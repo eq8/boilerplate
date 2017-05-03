@@ -5,31 +5,11 @@ nconf
 	.argv()
 	.file({file: './defaults.json'});
 
-// create and initialize an eq8-api object to be passed as a context for node-red
-var api = require('eq8-api')();
-
-// create a seneca transport client to the version control service (VCS) via rabbitmq
-var seneca = require('seneca')();
-seneca.use(require('seneca-amqp-transport'));
-
-var client = seneca.client({
-	type: 'amqp',
-	host: nconf.get('queueUrl'),
-	pin: 'to:vcs'
-});
-
-// when a node-red message is routed to an eq8 output node, it triggers a `dispatch` event
-// we listen to that dispatch event and forward it to the seneca transport client
-api.on('dispatch', function() {
-	this.logger.trace('dispatch', arguments);
-	client.act.apply(client, arguments);
-});
-
 // initialize settings object for node-red
 var settings = {
+	httpNodeRoot: nconf.get('apiRoot'),
 	httpAdminRoot: nconf.get('adminRoot'),
-	nodesDir: '/src/nodes',
-	api: api
+	nodesDir: '/src/nodes'
 };
 
 // initialize server to be used with node-red
@@ -88,27 +68,7 @@ app.use(function(error, req, res, next) {
 
 // create node-red admin route
 app.use(settings.httpAdminRoot, RED.httpAdmin);
-
-// map GET /<apiRoot> requests to api.express calls
-app.get(nconf.get('apiRoot'), function(req, res) {
-	api.express({user: req.user}, req.query, function done(err, result) {
-		if (err) {
-			res.status(500);
-		}
-
-		if(result) {
-			res.json(result);
-		}
-
-		res.end();
-	});
-});
-
-// map GET /<apiRoot> requests to api.state calls
-app.post(nconf.get('apiRoot'), function(req, res) {
-	api.state({user: req.user}, req.body);
-	res.end();
-});
+app.use(settings.httpNodeRoot, RED.httpNode);
 
 server.listen(nconf.get('port'));
 
