@@ -13,7 +13,7 @@ services:
     image: redis:3.2.8-alpine
     restart: always
   elasticsearch:
-    image: elasticsearch:5.3.1
+    image: elasticsearch:5.3.2-alpine
     restart: always
   proxy:
     build: services/proxy
