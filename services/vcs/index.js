@@ -42,23 +42,28 @@ var _ = require('lodash');
 listen.add({to: 'vcs'}, function(msg, done) {
 	var callback = _.once(_.ary(done, 0));
 
-	knex.transaction(function(trx) {
-		return Rx.Observable
-			.fromArray(msg.items)
-			.concatMap(function(item) {
-				var insert = trx.insert({
-					type: item._type,
-					id: item._id,
-					version: item._version
+	knex
+		.transaction(function(trx) {
+			return Rx.Observable
+				.of(msg.body)
+				.concatMap(body => {
+					return Rx.Observable.fromArray(body.items);
 				})
-					.into('version');
+				.concatMap(function(item) {
+					var insert = trx
+						.insert({
+							type: item.type,
+							id: item.id,
+							version: item.version
+						})
+						.into('version');
 
-				return Rx.Observable.fromNodeCallback(insert.asCallback, insert)();
-			})
-			.toPromise();
-	})
-	.then(function() {
-		client.act({to: 'broadcast', items: msg.items}, callback);
-	})
-	.catch(callback);
+					return Rx.Observable.fromNodeCallback(insert.asCallback, insert)();
+				})
+				.toPromise();
+		})
+		.then(function() {
+			client.act({to: 'broadcast', items: msg.body.items}, callback);
+		})
+		.catch(callback);
 });
