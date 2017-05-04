@@ -17,7 +17,7 @@ module.exports = function(RED) {
 		var node = this;
 
 		node.on('input', function(msg) {
-			client.act(msg);
+			client.act(Object.assign({to: 'vcs'}, {body: msg}));
 		});
 	}
 
