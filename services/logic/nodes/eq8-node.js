@@ -13,12 +13,17 @@ var client = seneca.client({
 });
 
 module.exports = function(RED) {
-	function store() {
+	function store(n) {
+		RED.nodes.createNode(this,n);
 		var node = this;
 
 		node.on('input', function(msg) {
 			client.act(Object.assign({to: 'vcs'}, {body: msg}), (err, payload) => {
-				node.send(Object.assign({}, {error: err, payload: payload}));
+				try {
+					this.send(Object.assign({}, {error: err, payload: payload}));
+				} catch(ex) {
+					this.error(ex);
+				}
 			});
 		});
 	}
