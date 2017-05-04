@@ -17,7 +17,9 @@ module.exports = function(RED) {
 		var node = this;
 
 		node.on('input', function(msg) {
-			client.act(Object.assign({to: 'vcs'}, {body: msg}));
+			client.act(Object.assign({to: 'vcs'}, {body: msg}), (err, payload) => {
+				node.send(Object.assign({}, {error: err, payload: payload}));
+			});
 		});
 	}
 
