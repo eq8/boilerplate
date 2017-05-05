@@ -37,10 +37,12 @@ var client = transport.client({
 });
 
 var Rx = require('rx');
-var _ = require('lodash');
 
 listen.add({to: 'vcs'}, function(msg, done) {
-	var callback = _.once(_.ary(done, 0));
+	// map error as a result to prevent seneca fatal error
+	var callback = function(err) {
+		done(null, {error: err});
+	};
 
 	knex
 		.transaction(function(trx) {

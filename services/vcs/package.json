@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "knex": "0.12.6",
-    "lodash": "4.17.2",
     "mysql": "2.11.1",
     "nconf": "0.8.4",
     "rx": "4.1.0",
