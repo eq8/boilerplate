@@ -18,11 +18,11 @@ module.exports = function(RED) {
 		var node = this;
 
 		node.on('input', function(msg) {
-			client.act(Object.assign({to: 'vcs'}, {body: msg}), (err, payload) => {
+			client.act(Object.assign({to: 'vcs'}, {body: msg}), function callback(err, reply) {
 				try {
-					this.send(Object.assign({}, {error: err, payload: payload}));
+					node.send(Object.assign({}, {error: reply.error}));
 				} catch(ex) {
-					this.error(ex);
+					node.error(ex);
 				}
 			});
 		});
