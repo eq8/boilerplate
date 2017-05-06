@@ -26,22 +26,22 @@ var indexKey = nconf.get('indexKey');
 
 listen.add({to: 'broadcast'}, function(msg, done) {
 	Rx.Observable
-		.from(msg.items)
-		.map(item => {
-			return item[indexKey];
+		.from(msg.payload)
+		.map(obj => {
+			return obj[indexKey];
 		})
-		.reduce((item, currentValue) => {
-			if(_.has(item, 'schemaVersion')) {
-				switch(item.schemaVersion) {
+		.reduce((obj, currentValue) => {
+			if(_.has(obj, 'schemaVersion')) {
+				switch(obj.schemaVersion) {
 				case '0.1':
 				default:
-					currentValue = _.concat(currentValue, item.bulkItems);
+					currentValue = _.concat(currentValue, obj.bulk);
 					break;
 				}
 			}
 			return currentValue;
 		}, [])
-		.subscribeOnNext(bulkItems => {
-			client.bulk({body: bulkItems}, done);
+		.subscribeOnNext(bulk => {
+			client.bulk({body: bulk}, done);
 		});
 });
