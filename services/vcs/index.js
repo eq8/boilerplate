@@ -49,14 +49,14 @@ listen.add({to: 'vcs'}, function(msg, done) {
 			return Rx.Observable
 				.of(msg.body)
 				.concatMap(body => {
-					return Rx.Observable.fromArray(body.items);
+					return Rx.Observable.fromArray(body.payload);
 				})
-				.concatMap(function(item) {
+				.concatMap(function(obj) {
 					var insert = trx
 						.insert({
-							type: item.type,
-							id: item.id,
-							version: item.version
+							type: obj.type,
+							id: obj.id,
+							version: obj.version
 						})
 						.into('version');
 
@@ -65,7 +65,7 @@ listen.add({to: 'vcs'}, function(msg, done) {
 				.toPromise();
 		})
 		.then(function() {
-			client.act({to: 'broadcast', items: msg.body.items}, callback);
+			client.act({to: 'broadcast', payload: msg.body.payload}, callback);
 		})
 		.catch(callback);
 });
