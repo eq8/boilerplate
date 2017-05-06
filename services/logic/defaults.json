@@ -1,5 +1,8 @@
 {
 	"apiRoot": "/api",
+	"apiBody": {
+		"parser": "json"
+	},
 	"adminRoot": "/admin",
 	"jwt": {
 		"secret": "secret",

@@ -53,9 +53,11 @@ app.use(function initAnonymousUser(req, res, next) {
 	next();
 });
 
-// include body-parser middleware for parsing json for the apiRoot
+// include body-parser middleware for parsing the body for the apiRoot
 var bodyParser = require('body-parser');
-app.use(nconf.get('apiRoot'), bodyParser.json());
+var apiBodyParser = nconf.get('apiBody:parser');
+var apiBodyOptions = nconf.get('apiBody:options');
+app.use(nconf.get('apiRoot'), bodyParser[apiBodyParser](apiBodyOptions));
 
 // throw an error 500 if json was invalid
 app.use(function(error, req, res, next) {
