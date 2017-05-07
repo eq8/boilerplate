@@ -1,5 +1,5 @@
 {
-  "name": "vcs",
+  "name": "indexer",
   "main": "index.js",
   "private": true,
   "dependencies": {
