@@ -29,11 +29,13 @@ listen.add({to: 'broadcast'}, function(msg, done) {
 		done(null, {error: err});
 	};
 
-	Rx.Observable
+	var observable = Rx.Observable
 		.from(msg.payload)
 		.map(obj => {
 			return obj[indexKey];
-		})
+		});
+
+	observable
 		.reduce((acc, indexObj) => {
 			if(_.has(indexObj, 'schemaVersion')) {
 				switch(indexObj.schemaVersion) {
@@ -47,5 +49,24 @@ listen.add({to: 'broadcast'}, function(msg, done) {
 		}, [])
 		.subscribeOnNext(bulk => {
 			client.bulk({body: bulk}, callback);
+		});
+
+	observable
+		.concatMap(indexObj => {
+			var cmds = [];
+
+			if(_.has(indexObj, 'schemaVersion')) {
+				switch(indexObj.schemaVersion) {
+				case '0.1':
+				default:
+					cmds = Rx.Observable.from(indexObj.indices);
+					break;
+				}
+			}
+
+			return cmds;
+		})
+		.subscribeOnNext(cmd => {
+			client.indices[cmd.key].apply(client.indices, cmd.args);
 		});
 });
