@@ -43,6 +43,12 @@ services:
      - mysql
      - rabbitmq
      - redis
+  cacher:
+    build: services/cacher
+    image: eq8/cacher
+    restart: always
+    links:
+     - redis
   indexer:
     build: services/indexer
     image: eq8/indexer

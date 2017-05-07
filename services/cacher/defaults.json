@@ -1,0 +1,7 @@
+{
+	"cacheHost": "redis",
+	"cachePort": "6379",
+	"cacheKey": "cache",
+	"pubsubHost": "redis",
+	"pubsubPort": "6379"
+}
