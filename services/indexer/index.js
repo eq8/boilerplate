@@ -25,6 +25,10 @@ var client = new elasticsearch.Client({
 var indexKey = nconf.get('indexKey');
 
 listen.add({to: 'broadcast'}, function(msg, done) {
+	var callback = err => {
+		done(null, {error: err});
+	};
+
 	Rx.Observable
 		.from(msg.payload)
 		.map(obj => {
@@ -42,6 +46,6 @@ listen.add({to: 'broadcast'}, function(msg, done) {
 			return currentValue;
 		}, [])
 		.subscribeOnNext(bulk => {
-			client.bulk({body: bulk}, done);
+			client.bulk({body: bulk}, callback);
 		});
 });
