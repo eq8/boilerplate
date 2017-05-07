@@ -37,14 +37,13 @@ listen.add({to: 'broadcast'}, function(msg, done) {
 
 	observable
 		.reduce((acc, indexObj) => {
-			if(_.has(indexObj, 'schemaVersion')) {
-				switch(indexObj.schemaVersion) {
-				case '0.1':
-				default:
-					acc = _.concat(acc, indexObj.bulk);
-					break;
-				}
+			switch(indexObj.schemaVersion) {
+			case '0.1':
+			default:
+				acc = _.concat(acc, indexObj.bulk);
+				break;
 			}
+
 			return acc;
 		}, [])
 		.subscribeOnNext(bulk => {
@@ -55,13 +54,11 @@ listen.add({to: 'broadcast'}, function(msg, done) {
 		.concatMap(indexObj => {
 			var cmds = [];
 
-			if(_.has(indexObj, 'schemaVersion')) {
-				switch(indexObj.schemaVersion) {
-				case '0.1':
-				default:
-					cmds = Rx.Observable.from(indexObj.indices);
-					break;
-				}
+			switch(indexObj.schemaVersion) {
+			case '0.1':
+			default:
+				cmds = Rx.Observable.from(indexObj.indices);
+				break;
 			}
 
 			return cmds;
