@@ -34,16 +34,16 @@ listen.add({to: 'broadcast'}, function(msg, done) {
 		.map(obj => {
 			return obj[indexKey];
 		})
-		.reduce((obj, currentValue) => {
-			if(_.has(obj, 'schemaVersion')) {
-				switch(obj.schemaVersion) {
+		.reduce((acc, indexObj) => {
+			if(_.has(indexObj, 'schemaVersion')) {
+				switch(indexObj.schemaVersion) {
 				case '0.1':
 				default:
-					currentValue = _.concat(currentValue, obj.bulk);
+					acc = _.concat(acc, indexObj.bulk);
 					break;
 				}
 			}
-			return currentValue;
+			return acc;
 		}, [])
 		.subscribeOnNext(bulk => {
 			client.bulk({body: bulk}, callback);
