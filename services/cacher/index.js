@@ -32,14 +32,13 @@ listen.add({to: 'broadcast'}, function(msg, done) {
 			return obj[cacheKey];
 		})
 		.reduce((acc, cacheObj) => {
-			if(_.has(cacheObj, 'schemaVersion')) {
-				switch(cacheObj.schemaVersion) {
-				case '0.1':
-				default:
-					acc = _.concat(acc, cacheObj.bulk);
-					break;
-				}
+			switch(cacheObj.schemaVersion) {
+			case '0.1':
+			default:
+				acc = _.concat(acc, cacheObj.bulk);
+				break;
 			}
+
 			return acc;
 		}, [])
 		.concatMap(bulk => {
