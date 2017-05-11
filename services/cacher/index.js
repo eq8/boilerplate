@@ -23,7 +23,7 @@ var cacheKey = nconf.get('cacheKey');
 
 listen.add({to: 'broadcast'}, function(msg, done) {
 	var callback = err => {
-		done(null, {error: err});
+		done(null, {from: 'cacher', payload: {ok: !err, error: err}});
 	};
 
 	Rx.Observable
@@ -31,6 +31,7 @@ listen.add({to: 'broadcast'}, function(msg, done) {
 		.map(obj => {
 			return obj[cacheKey];
 		})
+		.where(cacheObj => !_.isEmpty(cacheObj))
 		.reduce((acc, cacheObj) => {
 			switch(cacheObj.schemaVersion) {
 			case '0.1':
