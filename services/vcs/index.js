@@ -41,7 +41,7 @@ var Rx = require('rx');
 listen.add({to: 'vcs'}, function(msg, done) {
 	// map error as a result to prevent seneca fatal error
 	var callback = function(err) {
-		done(null, {error: err});
+		done(null, {ok: !err, error: err});
 	};
 
 	knex
