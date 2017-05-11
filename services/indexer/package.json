@@ -3,6 +3,7 @@
   "main": "index.js",
   "private": true,
   "dependencies": {
+    "async": "2.4.0",
     "elasticsearch": "12.1.1",
     "lodash": "4.17.2",
     "nconf": "0.8.4",

@@ -15,6 +15,7 @@ var listen = transport.listen({
 	pin: 'to:broadcast'
 });
 
+var async = require('async');
 var Rx = require('rx');
 var _ = require('lodash');
 var elasticsearch = require('elasticsearch');
@@ -26,44 +27,52 @@ var indexKey = nconf.get('indexKey');
 
 listen.add({to: 'broadcast'}, function(msg, done) {
 	var callback = err => {
-		done(null, {error: err});
+		done(null, {from: 'indexer', payload: {ok: !err, error: err}});
 	};
 
-	var observable = Rx.Observable
+	if(!_.has(msg, 'payload.'+indexKey)) {
+		return callback();
+	}
+
+	var payload = Rx.Observable
 		.from(msg.payload)
 		.map(obj => {
 			return obj[indexKey];
-		});
-
-	observable
-		.reduce((acc, indexObj) => {
-			switch(indexObj.schemaVersion) {
-			case '0.1':
-			default:
-				acc = _.concat(acc, indexObj.bulk);
-				break;
-			}
-
-			return acc;
-		}, [])
-		.subscribeOnNext(bulk => {
-			client.bulk({body: bulk}, callback);
-		});
-
-	observable
-		.concatMap(indexObj => {
-			var cmds = [];
-
-			switch(indexObj.schemaVersion) {
-			case '0.1':
-			default:
-				cmds = Rx.Observable.from(indexObj.indices);
-				break;
-			}
-
-			return cmds;
 		})
-		.subscribeOnNext(cmd => {
-			client.indices[cmd.key].apply(client.indices, cmd.args);
-		});
+		.where(indexObj => !_.isEmpty(indexObj));
+
+	async.parallel([
+		done => {
+			var cb = _.once(done);
+			var obs = payload
+				.where(indexObj => _.isArray(indexObj.bulk))
+				.map(indexObj => {
+					return indexObj.bulk;
+				})
+				.concatMap(bulk => {
+					return Rx.Observable
+						.fromNodeCallback(client.bulk, client)({body: bulk});
+				});
+			obs.subscribeOnError(cb);
+			obs.subscribeOnCompleted(cb);
+		},
+		done => {
+			var cb = _.once(done);
+
+			var obs = payload
+				.where(indexObj => _.isArray(indexObj.indices))
+				.concatMap(indexObj => {
+					return Rx.Observable
+						.from(indexObj.indices);
+				})
+				.concatMap(cmd => {
+					return Rx.Observable
+						.fromNodeCallback((client, key, args, done) => {
+							client.indices[key].apply(client.indices, args, done)
+						})(client, cmd.key, cmd.args);
+				});
+				obs.subscribeOnError(cb);
+				obs.subscribeOnCompleted(cb);
+		}
+	], callback);
 });
